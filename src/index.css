@@ -1,0 +1,1403 @@
+/* ============================================================
+   Design Tokens
+   ============================================================ */
+:root {
+  --green-dark: #0d2418;
+  --green-mid: #1a3a2a;
+  --green-light: #2a5040;
+  --gold: #c9a84c;
+  --gold-light: #e8c96a;
+  --gold-dim: #8b7030;
+  --cream: #f5f0e8;
+  --cream-dim: #c8bfad;
+  --red: #8b1a1a;
+  --red-light: #c0392b;
+  --white: #ffffff;
+  --shadow: rgba(0, 0, 0, 0.5);
+
+  /* Badge colors */
+  --badge-prop: #6b1a1a;
+  --badge-moneyline: #1a2a6b;
+  --badge-overunder: #0d3020;
+  --badge-multiple: #2d1a5a;
+  --badge-fill: #3a2010;
+}
+
+/* ============================================================
+   Reset & Base
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  min-height: 100%;
+}
+
+body {
+  font-family: Georgia, 'Times New Roman', serif;
+  background-color: var(--green-dark);
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.02) 0px,
+      rgba(255, 255, 255, 0.02) 1px,
+      transparent 1px,
+      transparent 50%
+    );
+  background-size: 4px 4px;
+  color: var(--cream);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: 'Playfair Display', Georgia, serif;
+  line-height: 1.2;
+}
+
+a {
+  color: var(--gold);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--gold-light);
+  text-decoration: underline;
+}
+
+/* ============================================================
+   Layout Helpers
+   ============================================================ */
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem calc(6rem + env(safe-area-inset-bottom));
+}
+
+.page-narrow {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.page-wide {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* ============================================================
+   Cards / Panels
+   ============================================================ */
+.card {
+  background: var(--green-mid);
+  border: 1px solid var(--gold);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px var(--shadow);
+  padding: 1.5rem;
+}
+
+.card + .card {
+  margin-top: 1rem;
+}
+
+/* ============================================================
+   Buttons
+   ============================================================ */
+.btn {
+  display: inline-block;
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: Georgia, serif;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: opacity 0.15s, transform 0.1s;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-primary {
+  background: var(--gold);
+  color: var(--green-dark);
+  font-weight: bold;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--gold-light);
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: rgba(201, 168, 76, 0.1);
+}
+
+.btn-danger {
+  background: var(--red);
+  color: var(--cream);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: var(--red-light);
+}
+
+.btn-sm {
+  padding: 0.4rem 1rem;
+  font-size: 0.8rem;
+}
+
+.btn-full {
+  width: 100%;
+  display: block;
+}
+
+/* ============================================================
+   Form Elements
+   ============================================================ */
+input[type="text"],
+input[type="number"],
+input[type="password"],
+input[type="search"],
+textarea,
+select {
+  width: 100%;
+  background: var(--green-dark);
+  border: 1px solid var(--gold-dim);
+  border-radius: 4px;
+  color: var(--cream);
+  font-family: Georgia, serif;
+  font-size: 1rem;
+  padding: 0.75rem 1rem;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="password"]:focus,
+input[type="search"]:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px rgba(201, 168, 76, 0.25);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--cream-dim);
+  opacity: 0.6;
+}
+
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
+select option {
+  background: var(--green-dark);
+  color: var(--cream);
+}
+
+label {
+  display: block;
+  color: var(--cream-dim);
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-error {
+  color: #ff6b6b;
+  font-size: 0.85rem;
+  margin-top: 0.4rem;
+}
+
+/* ============================================================
+   Bet Type Badges
+   ============================================================ */
+.badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  font-family: Georgia, serif;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.badge-prop_bet        { background: var(--badge-prop);      color: #ffaaaa; border: 1px solid #8b1a1a; }
+.badge-moneyline       { background: var(--badge-moneyline);  color: #aac4ff; border: 1px solid #1a2a6b; }
+.badge-over_under      { background: var(--badge-overunder);  color: #aaffcc; border: 1px solid #0d3020; }
+.badge-multiple_choice { background: var(--badge-multiple);   color: #d4aaff; border: 1px solid #2d1a5a; }
+.badge-fill_blank      { background: var(--badge-fill);       color: #ffddaa; border: 1px solid #3a2010; }
+
+/* ============================================================
+   Decorative Elements
+   ============================================================ */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--gold-dim);
+  margin: 1.5rem 0;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--gold-dim);
+  opacity: 0.5;
+}
+
+.suits-row {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  font-size: 1.4rem;
+  color: var(--gold-dim);
+  letter-spacing: 0.5rem;
+}
+
+.suits-row .red-suit {
+  color: var(--red);
+}
+
+.monogram {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  color: var(--gold);
+  font-size: 3rem;
+  font-weight: 700;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+
+/* ============================================================
+   Header Component
+   ============================================================ */
+.site-header {
+  width: 100%;
+  background: var(--green-mid);
+  border-bottom: 1px solid var(--gold-dim);
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.site-header .brand {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  color: var(--gold);
+  font-size: 1.1rem;
+}
+
+.site-header nav {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.site-header nav a {
+  font-size: 0.85rem;
+  color: var(--cream-dim);
+  letter-spacing: 0.5px;
+}
+
+.site-header nav a:hover {
+  color: var(--gold);
+  text-decoration: none;
+}
+
+.header-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--cream-dim);
+  font-size: 0.85rem;
+  padding: 0;
+}
+
+.mute-btn {
+  font-size: 1rem;
+  line-height: 1;
+  opacity: 0.7;
+}
+
+/* ============================================================
+   Sticky Footer Nav
+   ============================================================ */
+.sticky-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--green-mid);
+  border-top: 1px solid var(--gold-dim);
+  padding: 0.75rem 1rem;
+  padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  z-index: 100;
+}
+
+/* ============================================================
+   Bottom Sheet
+   ============================================================ */
+.sheet-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+  animation: fadeIn 0.2s ease;
+}
+
+.sheet {
+  background: var(--green-mid);
+  border-top: 2px solid var(--gold-dim);
+  border-radius: 20px 20px 0 0;
+  width: 100%;
+  max-height: 92vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.sheet-handle {
+  width: 40px;
+  height: 4px;
+  background: var(--gold-dim);
+  border-radius: 2px;
+  margin: 12px auto 0;
+  opacity: 0.6;
+}
+
+.sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem 0.25rem;
+}
+
+.sheet-close {
+  background: rgba(255,255,255,0.08);
+  border: none;
+  color: var(--cream-dim);
+  font-size: 1rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sheet-body {
+  padding: 0.75rem 1.25rem 1.5rem;
+}
+
+.sheet-prompt {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem;
+  color: var(--cream);
+  margin: 0 0 0.4rem;
+  line-height: 1.4;
+}
+
+.sheet-meta {
+  font-size: 0.8rem;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 1rem;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ============================================================
+   Leaderboard Table
+   ============================================================ */
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.leaderboard-table th {
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  color: var(--gold);
+  font-family: Georgia, serif;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--gold-dim);
+}
+
+.leaderboard-table td {
+  padding: 0.75rem 0.75rem;
+  border-bottom: 1px solid rgba(201, 168, 76, 0.1);
+  font-size: 0.95rem;
+}
+
+.leaderboard-table tr.rank-1 td { background: rgba(201, 168, 76, 0.12); }
+.leaderboard-table tr.rank-2 td { background: rgba(180, 180, 180, 0.07); }
+.leaderboard-table tr.rank-3 td { background: rgba(160, 100, 40, 0.07); }
+.leaderboard-table tr.current-guest td { outline: 1px solid var(--gold); }
+
+.rank-crown  { color: var(--gold); font-size: 1.1rem; }
+.rank-silver { color: #b0b0b0; }
+.rank-bronze { color: #a06028; }
+
+/* ============================================================
+   Admin Styles
+   ============================================================ */
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.admin-sidebar {
+  width: 220px;
+  background: #0a1c12;
+  border-right: 1px solid var(--gold-dim);
+  padding: 1.5rem 1rem;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-sidebar .brand {
+  font-family: 'Playfair Display', Georgia, serif;
+  color: var(--gold);
+  font-size: 1rem;
+  font-style: italic;
+  margin-bottom: 2rem;
+  display: block;
+}
+
+.admin-sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.admin-sidebar nav a {
+  display: block;
+  padding: 0.6rem 0.75rem;
+  border-radius: 4px;
+  color: var(--cream-dim);
+  font-size: 0.9rem;
+  transition: background 0.15s;
+}
+
+.admin-sidebar nav a:hover,
+.admin-sidebar nav a.active {
+  background: var(--green-mid);
+  color: var(--gold);
+  text-decoration: none;
+}
+
+.admin-sidebar .exit-link {
+  margin-top: auto;
+  padding-top: 2rem;
+  display: block;
+  color: var(--cream-dim);
+  font-size: 0.8rem;
+}
+
+.admin-content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.admin-content h1 {
+  color: var(--gold);
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  background: var(--green-mid);
+  border: 1px solid var(--gold-dim);
+  border-radius: 6px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.stat-card .stat-value {
+  font-size: 2rem;
+  font-family: 'Playfair Display', Georgia, serif;
+  color: var(--gold);
+}
+
+.stat-card .stat-label {
+  font-size: 0.75rem;
+  color: var(--cream-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.admin-table th {
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  background: var(--green-light);
+  color: var(--gold);
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.admin-table td {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  vertical-align: middle;
+}
+
+.admin-table tr:hover td {
+  background: rgba(255,255,255,0.02);
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background: var(--green-mid);
+  border: 1px solid var(--gold-dim);
+  border-radius: 6px;
+  margin-bottom: 0.75rem;
+  gap: 1rem;
+}
+
+.toggle-row .toggle-info h3 {
+  font-size: 1rem;
+  color: var(--cream);
+  margin-bottom: 0.2rem;
+  font-family: Georgia, serif;
+  font-weight: normal;
+}
+
+.toggle-row .toggle-info p {
+  font-size: 0.8rem;
+  color: var(--cream-dim);
+}
+
+/* CSS Toggle Switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 26px;
+  flex-shrink: 0;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background: var(--green-dark);
+  border: 1px solid var(--gold-dim);
+  border-radius: 26px;
+  transition: background 0.2s;
+}
+
+.slider::before {
+  content: '';
+  position: absolute;
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background: var(--cream-dim);
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+.switch input:checked + .slider {
+  background: var(--gold-dim);
+  border-color: var(--gold);
+}
+
+.switch input:checked + .slider::before {
+  transform: translateX(22px);
+  background: var(--gold);
+}
+
+/* ============================================================
+   Question-type components
+   ============================================================ */
+.option-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1rem;
+  min-height: 56px;
+  background: var(--green-dark);
+  border: 2px solid var(--green-light);
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 0.75rem;
+  transition: border-color 0.15s, background 0.15s;
+  width: 100%;
+  text-align: left;
+  color: var(--cream);
+  font-family: Georgia, serif;
+  font-size: 1rem;
+}
+
+.option-card:hover {
+  border-color: var(--gold-dim);
+}
+
+.option-card.selected {
+  border-color: var(--gold);
+  background: rgba(201, 168, 76, 0.1);
+}
+
+.option-card .suit-icon {
+  color: var(--gold-dim);
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.option-card.selected .suit-icon {
+  color: var(--gold);
+}
+
+.option-odds {
+  margin-left: auto;
+  color: var(--gold);
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+}
+
+/* Over/Under */
+.ou-line {
+  text-align: center;
+  padding: 1.5rem;
+  background: var(--green-dark);
+  border: 1px solid var(--gold-dim);
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.ou-line .line-label {
+  font-size: 0.75rem;
+  color: var(--cream-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.ou-line .line-value {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 2.5rem;
+  color: var(--gold);
+}
+
+.ou-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.ou-btn {
+  padding: 1.25rem;
+  border: 2px solid var(--green-light);
+  background: var(--green-dark);
+  border-radius: 6px;
+  color: var(--cream);
+  font-family: Georgia, serif;
+  font-size: 1rem;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.15s, background 0.15s;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.ou-btn:hover      { border-color: var(--gold-dim); }
+.ou-btn.selected   { border-color: var(--gold); background: rgba(201, 168, 76, 0.1); }
+.ou-btn .ou-odds   { display: block; font-size: 0.8rem; color: var(--gold); margin-top: 0.25rem; }
+
+/* Prop bet */
+.prop-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.prop-btn {
+  padding: 1.5rem;
+  border: 2px solid var(--green-light);
+  background: var(--green-dark);
+  border-radius: 6px;
+  color: var(--cream);
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.4rem;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.prop-btn:hover    { border-color: var(--gold-dim); }
+.prop-btn.selected { border-color: var(--gold); background: rgba(201, 168, 76, 0.1); color: var(--gold); }
+.prop-btn .prop-odds { display: block; font-size: 0.8rem; font-family: Georgia, serif; margin-top: 0.25rem; color: var(--gold-dim); }
+.prop-btn.selected .prop-odds { color: var(--gold); }
+
+/* Moneyline */
+.matchup-card {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+.matchup-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem 1rem;
+  border: 2px solid var(--green-light);
+  background: var(--green-dark);
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.15s, background 0.15s;
+  gap: 0.5rem;
+  color: var(--cream);
+  font-family: Georgia, serif;
+}
+
+.matchup-side:hover    { border-color: var(--gold-dim); }
+.matchup-side.selected { border-color: var(--gold); background: rgba(201, 168, 76, 0.1); }
+
+.matchup-side .team-name { font-size: 1rem; }
+.matchup-side .team-odds { font-size: 1.3rem; font-family: 'Playfair Display', serif; color: var(--gold); }
+.matchup-side.selected .team-odds { color: var(--gold-light); }
+
+.matchup-vs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  color: var(--gold-dim);
+  font-size: 1rem;
+  padding: 0 0.25rem;
+}
+
+/* Fill blank */
+.fill-blank-wrapper {
+  font-size: 1.1rem;
+  line-height: 2;
+  color: var(--cream);
+}
+
+.fill-blank-input {
+  display: inline-block;
+  width: auto;
+  min-width: 160px;
+  border: none !important;
+  border-bottom: 2px solid var(--gold) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--gold) !important;
+  font-size: 1.1rem !important;
+  padding: 0 0.5rem !important;
+  text-align: center;
+}
+
+.fill-blank-input:focus {
+  box-shadow: none !important;
+  outline: none;
+}
+
+/* Chips wager input */
+.chips-wager {
+  background: var(--green-dark);
+  border: 1px solid var(--gold-dim);
+  border-radius: 6px;
+  padding: 1rem;
+  margin-top: 1.25rem;
+}
+
+.chips-wager label {
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+}
+
+.chips-wager .chips-balance {
+  font-size: 0.8rem;
+  color: var(--cream-dim);
+  margin-top: 0.4rem;
+}
+
+/* ============================================================
+   Welcome page
+   ============================================================ */
+.welcome-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  position: relative;
+  text-align: center;
+}
+
+.welcome-heading {
+  font-size: clamp(2rem, 8vw, 3.5rem);
+  color: var(--gold);
+  font-style: italic;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  margin: 0.5rem 0;
+}
+
+.welcome-names {
+  font-size: clamp(1rem, 4vw, 1.3rem);
+  color: var(--cream);
+  letter-spacing: 2px;
+}
+
+.welcome-date {
+  color: var(--gold-dim);
+  font-size: 0.95rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.welcome-desc {
+  color: var(--cream-dim);
+  font-style: italic;
+  font-size: 1rem;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+/* ============================================================
+   Board page
+   ============================================================ */
+.question-card {
+  background: var(--green-mid);
+  border: 1px solid var(--gold-dim);
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 2px 8px var(--shadow);
+  transition: border-color 0.15s;
+}
+
+.question-card.answered {
+  border-color: rgba(201, 168, 76, 0.4);
+}
+
+.question-card.result-correct {
+  border-color: rgba(109, 220, 150, 0.5);
+}
+
+.question-card.result-incorrect {
+  border-color: rgba(255, 128, 128, 0.4);
+}
+
+.result-reveal {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.85rem;
+}
+
+.result-reveal-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.result-answer-label {
+  color: var(--cream-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.75rem;
+}
+
+.result-answer-value {
+  color: var(--gold-light);
+  font-weight: 600;
+  flex: 1;
+}
+
+.result-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: bold;
+  letter-spacing: 0.3px;
+}
+
+.result-badge-correct {
+  background: rgba(109, 220, 150, 0.15);
+  color: #6ddc96;
+  border: 1px solid rgba(109, 220, 150, 0.4);
+}
+
+.result-badge-incorrect {
+  background: rgba(255, 128, 128, 0.1);
+  color: #ff8080;
+  border: 1px solid rgba(255, 128, 128, 0.3);
+}
+
+.result-badge-skipped {
+  color: var(--cream-dim);
+  font-weight: normal;
+}
+
+.question-card .question-prompt {
+  font-size: 1rem;
+  color: var(--cream);
+  margin: 0.5rem 0 0.75rem;
+}
+
+.question-card .answered-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(201, 168, 76, 0.15);
+  border: 1px solid var(--gold-dim);
+  border-radius: 20px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.82rem;
+  color: var(--gold);
+}
+
+.chip-balance {
+  text-align: center;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background: var(--green-mid);
+  border: 1px solid var(--gold-dim);
+  border-radius: 6px;
+  color: var(--gold);
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+}
+
+/* ============================================================
+   Name Entry Page
+   ============================================================ */
+.name-entry-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2.5rem 1.25rem calc(2.5rem + env(safe-area-inset-bottom));
+}
+
+.name-entry-inner {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.name-entry-header {
+  text-align: center;
+}
+
+.name-entry-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.9rem;
+  color: var(--gold);
+  font-style: italic;
+  margin: 0 0 0.4rem;
+  line-height: 1.2;
+}
+
+.name-entry-subtitle {
+  color: var(--cream-dim);
+  font-size: 0.88rem;
+  margin: 0;
+}
+
+.chips-banner {
+  width: 100%;
+  text-align: center;
+  padding: 0.65rem 1rem;
+  background: rgba(201, 168, 76, 0.08);
+  border: 1px solid var(--gold-dim);
+  border-radius: 6px;
+  color: var(--cream-dim);
+  font-size: 0.88rem;
+}
+
+.chips-banner strong {
+  color: var(--gold);
+}
+
+.name-search-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.name-search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gold-dim);
+  font-size: 1rem;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.name-entry-input {
+  width: 100%;
+  font-size: 1.1rem !important;
+  padding: 1rem 1rem !important;
+  border-radius: 8px !important;
+  border: 1.5px solid var(--gold-dim) !important;
+  min-height: 56px;
+}
+
+.name-entry-input:focus {
+  border-color: var(--gold) !important;
+}
+
+.name-hint {
+  text-align: center;
+  color: var(--cream-dim);
+  font-size: 0.82rem;
+  margin-top: 0.75rem;
+  opacity: 0.7;
+}
+
+.name-no-match {
+  text-align: center;
+  color: var(--cream-dim);
+  padding: 1.25rem 0.5rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.name-select-hint {
+  font-size: 0.75rem;
+  color: var(--gold-dim);
+  flex-shrink: 0;
+}
+
+.name-entry-walkin {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--cream-dim);
+  margin: 0;
+}
+
+.name-entry-walkin-btn {
+  background: none;
+  border: none;
+  color: var(--gold);
+  cursor: pointer;
+  font-size: 0.82rem;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.name-entry-back-link {
+  background: none;
+  border: none;
+  color: var(--cream-dim);
+  font-size: 0.82rem;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+/* ============================================================
+   Guest List (Name Entry)
+   ============================================================ */
+.guest-list-scroll {
+  max-height: 55vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.guest-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1rem 1.1rem;
+  min-height: 58px;
+  background: var(--green-dark);
+  border: 1.5px solid var(--green-light);
+  border-radius: 8px;
+  color: var(--cream);
+  font-size: 1.05rem;
+  font-family: Georgia, serif;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.guest-list-item:not(.claimed):active {
+  border-color: var(--gold);
+  background: rgba(201, 168, 76, 0.12);
+}
+
+.guest-list-item.claimed {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.claimed-badge {
+  font-size: 0.75rem;
+  color: var(--cream-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.locked-banner {
+  background: var(--red);
+  color: var(--cream);
+  text-align: center;
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   BetDetail page
+   ============================================================ */
+.bet-detail-prompt {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.1rem, 4vw, 1.5rem);
+  color: var(--cream);
+  margin: 1rem 0 1.5rem;
+  line-height: 1.4;
+}
+
+.points-info {
+  display: inline-block;
+  background: rgba(201, 168, 76, 0.1);
+  border: 1px solid var(--gold-dim);
+  border-radius: 4px;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.85rem;
+  color: var(--gold);
+  margin-bottom: 1.25rem;
+}
+
+.result-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+}
+
+.result-badge.correct {
+  background: rgba(40, 160, 80, 0.2);
+  border: 1px solid #28a050;
+  color: #6ddc96;
+}
+
+.result-badge.incorrect {
+  background: rgba(160, 40, 40, 0.2);
+  border: 1px solid #a02828;
+  color: #ff8080;
+}
+
+/* ============================================================
+   MySlip page
+   ============================================================ */
+.slip-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.slip-table th {
+  text-align: left;
+  padding: 0.5rem 0.6rem;
+  color: var(--gold);
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--gold-dim);
+  font-family: Georgia, serif;
+}
+
+.slip-table td {
+  padding: 0.6rem 0.6rem;
+  border-bottom: 1px solid rgba(201, 168, 76, 0.08);
+  vertical-align: top;
+}
+
+.slip-summary {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-top: 1px solid var(--gold-dim);
+  margin-top: 0.5rem;
+}
+
+.slip-summary .total-label {
+  color: var(--cream-dim);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.slip-summary .total-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  color: var(--gold);
+}
+
+/* ============================================================
+   Loading & Error States
+   ============================================================ */
+.loading-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--cream-dim);
+  font-style: italic;
+}
+
+.loading-state .spinner {
+  display: block;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--gold-dim);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 0.75rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.error-state {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: #ff8080;
+  font-style: italic;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--cream-dim);
+  font-style: italic;
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 600px) {
+  .admin-layout {
+    flex-direction: column;
+  }
+
+  .admin-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--gold-dim);
+    padding: 1rem;
+  }
+
+  .admin-sidebar nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .matchup-card {
+    grid-template-columns: 1fr;
+  }
+
+  .matchup-vs {
+    padding: 0.5rem;
+  }
+}
