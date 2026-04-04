@@ -17,6 +17,7 @@ import Questions from './pages/admin/Questions'
 import QuestionForm from './pages/admin/QuestionForm'
 import Settings from './pages/admin/Settings'
 import GuestList from './pages/admin/GuestList'
+import QRCode from './pages/admin/QRCode'
 
 function RequireGuest({ children }) {
   const { guest } = useGuest()
@@ -67,6 +68,7 @@ function AppRoutes() {
         <Route path="questions/:id/edit" element={<QuestionForm />} />
         <Route path="settings" element={<Settings />} />
         <Route path="guests" element={<GuestList />} />
+        <Route path="qr" element={<QRCode />} />
       </Route>
 
       {/* Fallback */}
