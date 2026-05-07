@@ -7,6 +7,9 @@ export default function Questions() {
   const [questions, setQuestions] = useState([])
   const [loading, setLoading] = useState(true)
   const [deleting, setDeleting] = useState(null)
+  const [dragIndex, setDragIndex] = useState(null)
+  const [dragOverIndex, setDragOverIndex] = useState(null)
+  const [saveError, setSaveError] = useState('')
 
   useEffect(() => {
     fetchQuestions()
@@ -35,26 +38,46 @@ export default function Questions() {
     setDeleting(null)
   }
 
-  async function moveUp(i) {
-    if (i === 0) return
-    const a = questions[i]
-    const b = questions[i - 1]
-    await Promise.all([
-      supabase.from('questions').update({ order_index: b.order_index }).eq('id', a.id),
-      supabase.from('questions').update({ order_index: a.order_index }).eq('id', b.id),
-    ])
-    fetchQuestions()
+  function handleDragStart(e, i) {
+    setDragIndex(i)
+    e.dataTransfer.effectAllowed = 'move'
   }
 
-  async function moveDown(i) {
-    if (i === questions.length - 1) return
-    const a = questions[i]
-    const b = questions[i + 1]
-    await Promise.all([
-      supabase.from('questions').update({ order_index: b.order_index }).eq('id', a.id),
-      supabase.from('questions').update({ order_index: a.order_index }).eq('id', b.id),
-    ])
-    fetchQuestions()
+  function handleDragOver(e, i) {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+    if (i !== dragOverIndex) setDragOverIndex(i)
+  }
+
+  function handleDrop(e, i) {
+    e.preventDefault()
+    if (dragIndex === null || dragIndex === i) {
+      setDragIndex(null)
+      setDragOverIndex(null)
+      return
+    }
+    const reordered = [...questions]
+    const [moved] = reordered.splice(dragIndex, 1)
+    reordered.splice(i, 0, moved)
+    setQuestions(reordered)
+    setDragIndex(null)
+    setDragOverIndex(null)
+    saveOrder(reordered)
+  }
+
+  function handleDragEnd() {
+    setDragIndex(null)
+    setDragOverIndex(null)
+  }
+
+  async function saveOrder(ordered) {
+    setSaveError('')
+    const { error } = await Promise.all(
+      ordered.map((q, i) =>
+        supabase.from('questions').update({ order_index: i }).eq('id', q.id)
+      )
+    ).then((results) => results.find((r) => r.error) || { error: null })
+    if (error) setSaveError('Failed to save order: ' + error.message)
   }
 
   return (
@@ -65,6 +88,8 @@ export default function Questions() {
           + Add Question
         </Link>
       </div>
+
+      {saveError && <p className="form-error" style={{ marginBottom: '1rem' }}>{saveError}</p>}
 
       {loading && (
         <div className="loading-state">
@@ -85,18 +110,38 @@ export default function Questions() {
           <table className="admin-table">
             <thead>
               <tr>
-                <th style={{ width: '40px' }}>#</th>
+                <th style={{ width: '32px' }} />
+                <th style={{ width: '32px' }}>#</th>
                 <th>Prompt</th>
                 <th>Type</th>
                 <th>Pts</th>
                 <th>Active</th>
-                <th>Order</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {questions.map((q, i) => (
-                <tr key={q.id}>
+                <tr
+                  key={q.id}
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, i)}
+                  onDragOver={(e) => handleDragOver(e, i)}
+                  onDrop={(e) => handleDrop(e, i)}
+                  onDragEnd={handleDragEnd}
+                  style={{
+                    opacity: dragIndex === i ? 0.4 : 1,
+                    background: dragOverIndex === i && dragIndex !== i
+                      ? 'rgba(212, 175, 55, 0.08)'
+                      : undefined,
+                    borderTop: dragOverIndex === i && dragIndex !== i
+                      ? '2px solid var(--gold-dim)'
+                      : undefined,
+                    transition: 'background 0.1s',
+                  }}
+                >
+                  <td style={{ cursor: 'grab', textAlign: 'center', color: 'var(--cream-dim)', fontSize: '1rem', userSelect: 'none' }}>
+                    ⠿
+                  </td>
                   <td style={{ color: 'var(--cream-dim)', fontSize: '0.8rem' }}>{i + 1}</td>
                   <td style={{ maxWidth: '260px' }}>
                     <span style={{ fontSize: '0.88rem' }}>
@@ -114,28 +159,6 @@ export default function Questions() {
                       />
                       <span className="slider" />
                     </label>
-                  </td>
-                  <td>
-                    <div style={{ display: 'flex', gap: '0.25rem' }}>
-                      <button
-                        className="btn btn-secondary btn-sm"
-                        onClick={() => moveUp(i)}
-                        disabled={i === 0}
-                        title="Move up"
-                        style={{ padding: '0.2rem 0.5rem' }}
-                      >
-                        ↑
-                      </button>
-                      <button
-                        className="btn btn-secondary btn-sm"
-                        onClick={() => moveDown(i)}
-                        disabled={i === questions.length - 1}
-                        title="Move down"
-                        style={{ padding: '0.2rem 0.5rem' }}
-                      >
-                        ↓
-                      </button>
-                    </div>
                   </td>
                   <td>
                     <div style={{ display: 'flex', gap: '0.5rem' }}>

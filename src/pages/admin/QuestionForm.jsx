@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
 
@@ -21,6 +21,8 @@ const DEFAULT_FORM = {
   options: ['', ''],
   over_under_line: '',
   odds: {},
+  answer_context: '',
+  answer_media_url: '',
 }
 
 export default function QuestionForm() {
@@ -32,6 +34,37 @@ export default function QuestionForm() {
   const [loading, setLoading] = useState(isEdit)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+  const [uploading, setUploading] = useState(false)
+  const [uploadError, setUploadError] = useState('')
+  const fileInputRef = useRef(null)
+
+  function isYouTubeUrl(url) {
+    return /(?:youtube\.com\/watch\?v=|youtu\.be\/)/.test(url)
+  }
+
+  async function handleImageUpload(e) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    if (!file.type.startsWith('image/')) {
+      setUploadError('Please select an image file.')
+      return
+    }
+    setUploading(true)
+    setUploadError('')
+    const ext = file.name.split('.').pop()
+    const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+    const { data, error: upErr } = await supabase.storage
+      .from('answer-media')
+      .upload(path, file, { cacheControl: '3600', upsert: false })
+    if (upErr) {
+      setUploadError('Upload failed: ' + upErr.message)
+      setUploading(false)
+      return
+    }
+    const { data: { publicUrl } } = supabase.storage.from('answer-media').getPublicUrl(data.path)
+    update('answer_media_url', publicUrl)
+    setUploading(false)
+  }
 
   useEffect(() => {
     if (isEdit) {
@@ -57,6 +90,8 @@ export default function QuestionForm() {
             options: data.options || ['', ''],
             over_under_line: data.over_under_line != null ? String(data.over_under_line) : '',
             odds: data.odds || {},
+            answer_context: data.answer_context || '',
+            answer_media_url: data.answer_media_url || '',
           })
           setLoading(false)
         })
@@ -139,6 +174,8 @@ export default function QuestionForm() {
       options: showOptions ? form.options.filter(Boolean) : null,
       over_under_line: showOULine && form.over_under_line ? parseFloat(form.over_under_line) : null,
       odds: showOdds ? form.odds : null,
+      answer_context: form.answer_context.trim() || null,
+      answer_media_url: form.answer_media_url.trim() || null,
     }
 
     const { error: err } = isEdit
@@ -315,6 +352,80 @@ export default function QuestionForm() {
             ))}
           </div>
         )}
+
+        {/* Answer context & media — shown to guests when answers are revealed */}
+        <div style={{ borderTop: '1px solid var(--gold-dim)', margin: '1.5rem 0 1rem', paddingTop: '1.25rem' }}>
+          <p style={{ color: 'var(--gold)', fontFamily: 'Playfair Display, Georgia, serif', fontStyle: 'italic', marginBottom: '0.75rem', fontSize: '0.95rem' }}>
+            Answer Reveal
+          </p>
+
+          <div className="form-group">
+            <label>Context / Explanation <span style={{ color: 'var(--cream-dim)', fontWeight: 'normal', fontSize: '0.8rem' }}>(shown to guests when answers are revealed)</span></label>
+            <textarea
+              rows={3}
+              value={form.answer_context}
+              onChange={(e) => update('answer_context', e.target.value)}
+              placeholder="e.g. Jack cried exactly 3 times — once during the vows, once during the first dance..."
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Image <span style={{ color: 'var(--cream-dim)', fontWeight: 'normal', fontSize: '0.8rem' }}>(optional)</span></label>
+
+            {/* Current image preview */}
+            {form.answer_media_url && !isYouTubeUrl(form.answer_media_url) && (
+              <div style={{ marginBottom: '0.75rem', position: 'relative', display: 'inline-block' }}>
+                <img
+                  src={form.answer_media_url}
+                  alt="Preview"
+                  style={{ maxWidth: '100%', maxHeight: '200px', borderRadius: '8px', display: 'block' }}
+                />
+                <button
+                  type="button"
+                  onClick={() => { update('answer_media_url', ''); if (fileInputRef.current) fileInputRef.current.value = '' }}
+                  style={{
+                    position: 'absolute', top: '6px', right: '6px',
+                    background: 'rgba(0,0,0,0.6)', border: 'none', borderRadius: '50%',
+                    color: '#fff', width: '24px', height: '24px', cursor: 'pointer',
+                    fontSize: '0.75rem', lineHeight: 1, display: 'flex', alignItems: 'center', justifyContent: 'center'
+                  }}
+                >
+                  ✕
+                </button>
+              </div>
+            )}
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              disabled={uploading}
+              style={{ display: 'none' }}
+              id="media-upload"
+            />
+            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+              <label
+                htmlFor="media-upload"
+                className="btn btn-secondary btn-sm"
+                style={{ cursor: uploading ? 'not-allowed' : 'pointer', opacity: uploading ? 0.6 : 1 }}
+              >
+                {uploading ? 'Uploading…' : form.answer_media_url && !isYouTubeUrl(form.answer_media_url) ? 'Replace Image' : 'Upload Image'}
+              </label>
+              {uploadError && <span style={{ color: '#ff8080', fontSize: '0.8rem' }}>{uploadError}</span>}
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label>YouTube URL <span style={{ color: 'var(--cream-dim)', fontWeight: 'normal', fontSize: '0.8rem' }}>(optional — use instead of an image)</span></label>
+            <input
+              type="url"
+              value={isYouTubeUrl(form.answer_media_url) ? form.answer_media_url : ''}
+              onChange={(e) => update('answer_media_url', e.target.value)}
+              placeholder="https://youtube.com/watch?v=..."
+            />
+          </div>
+        </div>
 
         {/* Order index */}
         <div className="form-group">

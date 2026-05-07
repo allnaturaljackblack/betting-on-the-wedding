@@ -1022,6 +1022,43 @@ label {
   font-weight: normal;
 }
 
+.answer-context {
+  margin: 0.5rem 0 0;
+  color: var(--cream-dim);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.answer-media {
+  margin-top: 0.75rem;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.answer-media img {
+  width: 100%;
+  max-height: 320px;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+}
+
+.answer-media-video {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+}
+
+.answer-media-video iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 8px;
+}
+
 .question-card .question-prompt {
   font-size: 1rem;
   color: var(--cream);

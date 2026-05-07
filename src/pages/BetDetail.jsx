@@ -132,6 +132,28 @@ export default function BetDetail() {
     question.correct_answer &&
     String(existingBet.answer).trim().toLowerCase() === String(question.correct_answer).trim().toLowerCase()
 
+  function renderAnswerMedia(url) {
+    if (!url) return null
+    const youtubeMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-Za-z0-9_-]{11})/)
+    if (youtubeMatch) {
+      return (
+        <div className="answer-media answer-media-video">
+          <iframe
+            src={`https://www.youtube.com/embed/${youtubeMatch[1]}`}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            title="Answer media"
+          />
+        </div>
+      )
+    }
+    return (
+      <div className="answer-media">
+        <img src={url} alt="Answer media" onError={(e) => { e.currentTarget.style.display = 'none' }} />
+      </div>
+    )
+  }
+
   const enrichedQ = { ...question, _isVegas: isVegas }
 
   const startingChips = settings?.starting_chips || 1000
@@ -217,15 +239,26 @@ export default function BetDetail() {
             )}
           </form>
 
-          {/* Result badge */}
+          {/* Result */}
           {showAnswers && existingBet && (
-            <div className={`result-badge ${isCorrect ? 'correct' : 'incorrect'}`}>
-              {isCorrect ? '✓ Correct!' : '✗ Incorrect'}
-              {question.correct_answer && !isCorrect && (
-                <span style={{ marginLeft: '0.5rem', opacity: 0.8 }}>
-                  Answer: {question.correct_answer}
+            <div className="result-reveal" style={{ marginTop: '1.5rem' }}>
+              <div className="result-reveal-row">
+                <span className="result-answer-label">Your Answer:</span>
+                <span style={{ color: 'var(--cream-dim)', fontSize: '0.85rem' }}>{existingBet.answer}</span>
+                <span className={`result-badge ${isCorrect ? 'result-badge-correct' : 'result-badge-incorrect'}`}>
+                  {isCorrect ? '✓ Correct' : '✗ Incorrect'}
                 </span>
+              </div>
+              {question.correct_answer && (
+                <div className="result-reveal-row">
+                  <span className="result-answer-label">Correct Answer:</span>
+                  <span className="result-answer-value">{question.correct_answer}</span>
+                </div>
               )}
+              {question.answer_context && (
+                <p className="answer-context">{question.answer_context}</p>
+              )}
+              {renderAnswerMedia(question.answer_media_url)}
             </div>
           )}
         </div>

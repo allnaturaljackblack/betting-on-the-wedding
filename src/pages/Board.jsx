@@ -92,6 +92,28 @@ export default function Board() {
     return normalized === String(q.correct_answer).trim().toLowerCase()
   }
 
+  function renderAnswerMedia(url) {
+    if (!url) return null
+    const youtubeMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-Za-z0-9_-]{11})/)
+    if (youtubeMatch) {
+      return (
+        <div className="answer-media answer-media-video">
+          <iframe
+            src={`https://www.youtube.com/embed/${youtubeMatch[1]}`}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            title="Answer media"
+          />
+        </div>
+      )
+    }
+    return (
+      <div className="answer-media">
+        <img src={url} alt="Answer media" onError={(e) => { e.currentTarget.style.display = 'none' }} />
+      </div>
+    )
+  }
+
   function displayCorrectAnswer(q) {
     if (q.type === 'fill_blank' && Array.isArray(q.accepted_answers) && q.accepted_answers.length) {
       return q.accepted_answers.join(' / ')
@@ -195,6 +217,10 @@ export default function Board() {
                         <span className="result-badge result-badge-skipped">— No bet placed</span>
                       )}
                     </div>
+                    {q.answer_context && (
+                      <p className="answer-context">{q.answer_context}</p>
+                    )}
+                    {renderAnswerMedia(q.answer_media_url)}
                   </div>
                 )}
               </div>
