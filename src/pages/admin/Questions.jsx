@@ -106,7 +106,8 @@ export default function Questions() {
       )}
 
       {!loading && questions.length > 0 && (
-        <div style={{ background: 'var(--green-mid)', border: '1px solid var(--gold-dim)', borderRadius: '6px', overflow: 'hidden' }}>
+        <div style={{ background: 'var(--green-mid)', border: '1px solid var(--gold-dim)', borderRadius: '6px' }}>
+          <div className="admin-table-scroll">
           <table className="admin-table">
             <thead>
               <tr>
@@ -181,6 +182,7 @@ export default function Questions() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       )}
     </div>

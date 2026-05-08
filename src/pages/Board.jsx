@@ -6,6 +6,7 @@ import { supabase } from '../lib/supabase'
 import BetTypeIcon from '../components/BetTypeIcon'
 import BetSheet from '../components/BetSheet'
 import Header from '../components/Header'
+import AnswerMedia from '../components/AnswerMedia'
 import { chipsSpent } from '../utils/scoring'
 import { playSuccess, playWrong, haptic } from '../utils/sounds'
 
@@ -90,28 +91,6 @@ export default function Board() {
     }
     if (!q.correct_answer) return null
     return normalized === String(q.correct_answer).trim().toLowerCase()
-  }
-
-  function renderAnswerMedia(url) {
-    if (!url) return null
-    const youtubeMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-Za-z0-9_-]{11})/)
-    if (youtubeMatch) {
-      return (
-        <div className="answer-media answer-media-video">
-          <iframe
-            src={`https://www.youtube.com/embed/${youtubeMatch[1]}`}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            title="Answer media"
-          />
-        </div>
-      )
-    }
-    return (
-      <div className="answer-media">
-        <img src={url} alt="Answer media" onError={(e) => { e.currentTarget.style.display = 'none' }} />
-      </div>
-    )
   }
 
   function displayCorrectAnswer(q) {
@@ -220,7 +199,7 @@ export default function Board() {
                     {q.answer_context && (
                       <p className="answer-context">{q.answer_context}</p>
                     )}
-                    {renderAnswerMedia(q.answer_media_url)}
+                    <AnswerMedia question={q} />
                   </div>
                 )}
               </div>
