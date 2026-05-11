@@ -3,6 +3,7 @@ import { Link, useParams, useNavigate } from 'react-router-dom'
 import { useGuest } from '../hooks/useGuest'
 import { supabase } from '../lib/supabase'
 import BetTypeIcon from '../components/BetTypeIcon'
+import AnswerMedia from '../components/AnswerMedia'
 import MultipleChoice from '../components/question-types/MultipleChoice'
 import FillBlank from '../components/question-types/FillBlank'
 import OverUnder from '../components/question-types/OverUnder'
@@ -217,15 +218,23 @@ export default function BetDetail() {
             )}
           </form>
 
-          {/* Result badge */}
+          {/* Result */}
           {showAnswers && existingBet && (
-            <div className={`result-badge ${isCorrect ? 'correct' : 'incorrect'}`}>
-              {isCorrect ? '✓ Correct!' : '✗ Incorrect'}
-              {question.correct_answer && !isCorrect && (
-                <span style={{ marginLeft: '0.5rem', opacity: 0.8 }}>
-                  Answer: {question.correct_answer}
+            <div className="result-reveal" style={{ marginTop: '1.5rem' }}>
+              <div className="result-reveal-row">
+                <span className="result-answer-label">Your Answer:</span>
+                <span style={{ color: 'var(--cream-dim)', fontSize: '0.85rem' }}>{existingBet.answer}</span>
+                <span className={`result-badge ${isCorrect ? 'result-badge-correct' : 'result-badge-incorrect'}`}>
+                  {isCorrect ? '✓ Correct' : '✗ Incorrect'}
                 </span>
+              </div>
+              {question.correct_answer && (
+                <div className="result-reveal-row">
+                  <span className="result-answer-label">Correct Answer:</span>
+                  <span className="result-answer-value">{question.correct_answer}</span>
+                </div>
               )}
+              <AnswerMedia question={question} />
             </div>
           )}
         </div>

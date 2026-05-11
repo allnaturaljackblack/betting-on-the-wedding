@@ -21,6 +21,9 @@ create table if not exists questions (
   points int not null default 100,
   active boolean not null default true,
   order_index int not null default 0,
+  answer_context text,
+  answer_media_url text,
+  answer_media_urls jsonb,
   created_at timestamptz default now()
 );
 

@@ -6,6 +6,7 @@ import { supabase } from '../lib/supabase'
 import BetTypeIcon from '../components/BetTypeIcon'
 import BetSheet from '../components/BetSheet'
 import Header from '../components/Header'
+import AnswerMedia from '../components/AnswerMedia'
 import { chipsSpent } from '../utils/scoring'
 import { playSuccess, playWrong, haptic } from '../utils/sounds'
 
@@ -195,6 +196,7 @@ export default function Board() {
                         <span className="result-badge result-badge-skipped">— No bet placed</span>
                       )}
                     </div>
+                    <AnswerMedia question={q} />
                   </div>
                 )}
               </div>

@@ -32,6 +32,9 @@ export default function AdminLayout() {
           <NavLink to="/admin/qr" className={({ isActive }) => isActive ? 'active' : ''}>
             QR Code
           </NavLink>
+          <NavLink to="/admin/mc" className={({ isActive }) => isActive ? 'active' : ''}>
+            🎙 MC View
+          </NavLink>
           <NavLink to="/admin/settings" className={({ isActive }) => isActive ? 'active' : ''}>
             Settings
           </NavLink>
