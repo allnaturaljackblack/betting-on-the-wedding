@@ -35,6 +35,14 @@ export default function MCView() {
   }
 
   function correctAnswerDisplay(q) {
+    if (q.type === 'over_under' && q.correct_answer && q.over_under_line != null) {
+      const result = parseFloat(q.correct_answer)
+      if (!isNaN(result)) {
+        if (result === q.over_under_line) return `Push (${result})`
+        const side = result > q.over_under_line ? 'Over' : 'Under'
+        return `${side} (${result})`
+      }
+    }
     return q.correct_answer || null
   }
 

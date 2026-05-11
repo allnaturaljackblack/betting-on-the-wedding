@@ -61,14 +61,33 @@ export default function Board() {
   function checkCorrect(q, bet) {
     if (!bet) return null
     const normalized = String(bet.answer).trim().toLowerCase()
+
     if (q.type === 'fill_blank' && Array.isArray(q.accepted_answers) && q.accepted_answers.length) {
       return q.accepted_answers.some((a) => String(a).trim().toLowerCase() === normalized)
     }
+
+    if (q.type === 'over_under' && q.correct_answer && q.over_under_line != null) {
+      const result = parseFloat(q.correct_answer)
+      if (!isNaN(result)) {
+        if (result === q.over_under_line) return null // push — no winner
+        const correctSide = result > q.over_under_line ? 'over' : 'under'
+        return normalized === correctSide
+      }
+    }
+
     if (!q.correct_answer) return null
     return normalized === String(q.correct_answer).trim().toLowerCase()
   }
 
   function displayCorrectAnswer(q) {
+    if (q.type === 'over_under' && q.correct_answer && q.over_under_line != null) {
+      const result = parseFloat(q.correct_answer)
+      if (!isNaN(result)) {
+        if (result === q.over_under_line) return `Push (${result})`
+        const side = result > q.over_under_line ? 'Over' : 'Under'
+        return `${side} (${result})`
+      }
+    }
     return q.correct_answer || null
   }
 
