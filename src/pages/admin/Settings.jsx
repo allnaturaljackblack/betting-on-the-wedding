@@ -9,6 +9,18 @@ export default function Settings() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [pwError, setPwError] = useState('')
   const [pwSuccess, setPwSuccess] = useState(false)
+  const [resetting, setResetting] = useState(false)
+  const [resetSuccess, setResetSuccess] = useState(false)
+
+  async function resetReveals() {
+    if (!window.confirm('Reset all revealed answers? Guests will no longer see any results until you reveal them again.')) return
+    setResetting(true)
+    setResetSuccess(false)
+    await supabase.from('questions').update({ answer_revealed: false }).neq('id', '00000000-0000-0000-0000-000000000000')
+    setResetting(false)
+    setResetSuccess(true)
+    setTimeout(() => setResetSuccess(false), 3000)
+  }
 
   useEffect(() => {
     fetchSettings()
@@ -150,6 +162,26 @@ export default function Settings() {
             </p>
           </div>
         )}
+
+        {/* Practice / Reset */}
+        <div style={{ marginTop: '1.5rem', background: 'var(--green-mid)', border: '1px solid var(--gold-dim)', borderRadius: '6px', padding: '1rem' }}>
+          <h3 style={{ fontSize: '0.95rem', color: 'var(--cream)', marginBottom: '0.25rem', fontFamily: 'Georgia, serif', fontWeight: 'normal' }}>
+            Practice Run
+          </h3>
+          <p style={{ fontSize: '0.82rem', color: 'var(--cream-dim)', marginBottom: '0.75rem' }}>
+            Hides all revealed answers from guests so you can run through the MC flow again from the start.
+          </p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <button
+              className="btn btn-danger btn-sm"
+              onClick={resetReveals}
+              disabled={resetting}
+            >
+              {resetting ? 'Resetting…' : 'Reset All Reveals'}
+            </button>
+            {resetSuccess && <span style={{ color: '#6ddc96', fontSize: '0.85rem' }}>✓ All reveals cleared</span>}
+          </div>
+        </div>
 
         {/* Change Admin Password */}
         <div style={{ marginTop: '1.5rem', background: 'var(--green-mid)', border: '1px solid var(--gold-dim)', borderRadius: '6px', padding: '1rem' }}>
