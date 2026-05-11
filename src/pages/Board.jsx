@@ -94,10 +94,7 @@ export default function Board() {
   }
 
   function displayCorrectAnswer(q) {
-    if (q.type === 'fill_blank' && Array.isArray(q.accepted_answers) && q.accepted_answers.length) {
-      return q.accepted_answers.join(' / ')
-    }
-    return q.correct_answer
+    return q.correct_answer || null
   }
 
   return (
@@ -146,7 +143,7 @@ export default function Board() {
           {questions.map((q) => {
             const myBet = betMap[q.id]
             const isCorrect = showAnswers ? checkCorrect(q, myBet) : null
-            const hasResult = showAnswers && (q.correct_answer || (Array.isArray(q.accepted_answers) && q.accepted_answers.length))
+            const hasResult = showAnswers && Boolean(q.correct_answer)
 
             return (
               <div key={q.id} className={`question-card${myBet ? ' answered' : ''}${isCorrect === true ? ' result-correct' : isCorrect === false ? ' result-incorrect' : ''}`}>

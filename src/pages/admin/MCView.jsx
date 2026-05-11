@@ -34,10 +34,7 @@ export default function MCView() {
   )
 
   function correctAnswerDisplay(q) {
-    if (q.type === 'fill_blank' && Array.isArray(q.accepted_answers) && q.accepted_answers.length) {
-      return q.accepted_answers.join(' / ')
-    }
-    return q.correct_answer
+    return q.correct_answer || null
   }
 
   function QuestionCard({ q, index }) {
