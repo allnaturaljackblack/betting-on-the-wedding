@@ -37,7 +37,6 @@ export function formatOdds(odds) {
  */
 export function calculateScore(bets, questions, settings) {
   const isVegas = settings?.scoring_mode === 'vegas'
-  const showAnswers = settings?.show_answers === true
 
   // Map questions by id for quick lookup
   const questionMap = {}
@@ -55,8 +54,8 @@ export function calculateScore(bets, questions, settings) {
     const q = questionMap[bet.question_id]
     if (!q) continue
 
-    // Only score if answers are shown or we're computing for admin
-    if (!showAnswers && !settings?._forceScore) continue
+    // Only score revealed questions (or all when force-scoring for admin leaderboard)
+    if (!q.answer_revealed && !settings?._forceScore) continue
 
     let isCorrect = false
     const normalizedAnswer = String(bet.answer).trim().toLowerCase()
