@@ -234,9 +234,6 @@ export default function BetDetail() {
                   <span className="result-answer-value">{question.correct_answer}</span>
                 </div>
               )}
-              {question.answer_context && (
-                <p className="answer-context">{question.answer_context}</p>
-              )}
               <AnswerMedia question={question} />
             </div>
           )}

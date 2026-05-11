@@ -196,9 +196,6 @@ export default function Board() {
                         <span className="result-badge result-badge-skipped">— No bet placed</span>
                       )}
                     </div>
-                    {q.answer_context && (
-                      <p className="answer-context">{q.answer_context}</p>
-                    )}
                     <AnswerMedia question={q} />
                   </div>
                 )}

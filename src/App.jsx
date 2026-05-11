@@ -18,6 +18,7 @@ import QuestionForm from './pages/admin/QuestionForm'
 import Settings from './pages/admin/Settings'
 import GuestList from './pages/admin/GuestList'
 import QRCode from './pages/admin/QRCode'
+import MCView from './pages/admin/MCView'
 
 function RequireGuest({ children }) {
   const { guest } = useGuest()
@@ -69,6 +70,7 @@ function AppRoutes() {
         <Route path="settings" element={<Settings />} />
         <Route path="guests" element={<GuestList />} />
         <Route path="qr" element={<QRCode />} />
+        <Route path="mc" element={<MCView />} />
       </Route>
 
       {/* Fallback */}

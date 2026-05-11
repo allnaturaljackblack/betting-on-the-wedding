@@ -1183,6 +1183,126 @@ label {
 .lightbox-prev { left: 0.5rem; }
 .lightbox-next { right: 0.5rem; }
 
+/* ============================================================
+   MC View
+   ============================================================ */
+.mc-view {
+  max-width: 640px;
+  margin: 0 auto;
+  padding-bottom: 4rem;
+}
+
+.mc-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--gold-dim);
+}
+
+.mc-header h1 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  color: var(--gold);
+  font-size: 1.8rem;
+  margin: 0 0 0.25rem;
+}
+
+.mc-subtitle {
+  color: var(--cream-dim);
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.mc-card {
+  background: var(--green-mid);
+  border: 1px solid var(--gold-dim);
+  border-radius: 12px;
+  padding: 1.25rem 1.25rem 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.mc-card-number {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  margin-bottom: 0.4rem;
+}
+
+.mc-card-prompt {
+  font-size: 1.05rem;
+  color: var(--cream);
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0 0 1rem;
+}
+
+.mc-answer-block {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  background: rgba(212, 175, 55, 0.08);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 6px 6px 0;
+  padding: 0.6rem 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.mc-answer-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  flex-shrink: 0;
+}
+
+.mc-answer-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--gold);
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+}
+
+.mc-talking-points {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.mc-talking-label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--cream-dim);
+  margin-bottom: 0.5rem;
+}
+
+.mc-talking-text {
+  font-size: 0.95rem;
+  color: var(--cream);
+  line-height: 1.6;
+  margin: 0;
+  font-style: italic;
+}
+
+.mc-section-divider {
+  text-align: center;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--cream-dim);
+  border-top: 1px solid var(--gold-dim);
+  padding-top: 1rem;
+  margin: 1.5rem 0 1.25rem;
+}
+
 .answer-media {
   margin-top: 0.75rem;
   border-radius: 8px;
