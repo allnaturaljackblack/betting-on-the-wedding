@@ -86,6 +86,7 @@ export function useLeaderboard() {
       .channel('leaderboard-realtime')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'bets' }, fetchAll)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'settings' }, fetchAll)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'questions' }, fetchAll)
       .subscribe()
 
     return () => {

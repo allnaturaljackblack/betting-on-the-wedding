@@ -1292,6 +1292,99 @@ label {
   font-style: italic;
 }
 
+.mc-reveal-btn {
+  background: var(--gold);
+  color: var(--green-dark);
+  border: none;
+  border-radius: 20px;
+  padding: 0.4rem 1rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  white-space: nowrap;
+}
+
+.mc-reveal-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.mc-revealed-badge {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #5cb85c;
+  letter-spacing: 0.5px;
+}
+
+.mc-no-answer-badge {
+  font-size: 0.75rem;
+  color: var(--cream-dim);
+  font-style: italic;
+}
+
+.mc-card-revealed {
+  opacity: 0.65;
+}
+
+/* Live score banner (guest Board) */
+.live-score-banner {
+  background: linear-gradient(135deg, rgba(212,175,55,0.12), rgba(212,175,55,0.06));
+  border: 1px solid var(--gold-dim);
+  border-radius: 10px;
+  padding: 0.9rem 1rem 0.75rem;
+  margin-bottom: 1.25rem;
+  text-align: center;
+}
+
+.live-score-main {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-bottom: 0.35rem;
+}
+
+.live-score-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--gold-dim);
+  font-weight: 700;
+}
+
+.live-score-value {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 1.6rem;
+  color: var(--gold);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.live-score-breakdown {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  font-size: 0.75rem;
+}
+
+.live-score-correct {
+  color: #5cb85c;
+  font-weight: 600;
+}
+
+.live-score-incorrect {
+  color: #e05252;
+  font-weight: 600;
+}
+
+.live-score-remaining {
+  color: var(--cream-dim);
+}
+
 .mc-section-divider {
   text-align: center;
   font-size: 0.75rem;

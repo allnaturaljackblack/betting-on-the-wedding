@@ -24,6 +24,7 @@ create table if not exists questions (
   answer_context text,
   answer_media_url text,
   answer_media_urls jsonb,
+  answer_revealed boolean not null default false,
   created_at timestamptz default now()
 );
 

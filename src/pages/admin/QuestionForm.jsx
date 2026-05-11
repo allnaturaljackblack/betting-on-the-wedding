@@ -178,9 +178,7 @@ export default function QuestionForm() {
       type: form.type,
       prompt: form.prompt.trim(),
       points: parseInt(form.points, 10) || 100,
-      correct_answer: isFillBlank
-        ? (validAcceptedAnswers[0] || null)
-        : (form.correct_answer || null),
+      correct_answer: form.correct_answer.trim() || null,
       accepted_answers: isFillBlank ? validAcceptedAnswers : null,
       active: form.active,
       order_index: parseInt(form.order_index, 10) || 0,
@@ -266,32 +264,43 @@ export default function QuestionForm() {
 
         {/* Correct Answer */}
         {form.type === 'fill_blank' ? (
-          <div className="form-group">
-            <label>Accepted Answers <span style={{ color: 'var(--cream-dim)', fontWeight: 'normal', fontSize: '0.8rem' }}>(case-insensitive)</span></label>
-            {form.accepted_answers.map((ans, i) => (
-              <div key={i} style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                <input
-                  type="text"
-                  value={ans}
-                  onChange={(e) => updateAcceptedAnswer(i, e.target.value)}
-                  placeholder={i === 0 ? 'e.g. Chicago' : 'e.g. Chi-town'}
-                />
-                {form.accepted_answers.length > 1 && (
-                  <button
-                    type="button"
-                    className="btn btn-danger btn-sm"
-                    onClick={() => removeAcceptedAnswer(i)}
-                    style={{ flexShrink: 0 }}
-                  >
-                    ✕
-                  </button>
-                )}
-              </div>
-            ))}
-            <button type="button" className="btn btn-secondary btn-sm" onClick={addAcceptedAnswer}>
-              + Add Accepted Answer
-            </button>
-          </div>
+          <>
+            <div className="form-group">
+              <label>Accepted Answers <span style={{ color: 'var(--cream-dim)', fontWeight: 'normal', fontSize: '0.8rem' }}>(used for scoring, case-insensitive)</span></label>
+              {form.accepted_answers.map((ans, i) => (
+                <div key={i} style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                  <input
+                    type="text"
+                    value={ans}
+                    onChange={(e) => updateAcceptedAnswer(i, e.target.value)}
+                    placeholder={i === 0 ? 'e.g. Chicago' : 'e.g. Chi-town'}
+                  />
+                  {form.accepted_answers.length > 1 && (
+                    <button
+                      type="button"
+                      className="btn btn-danger btn-sm"
+                      onClick={() => removeAcceptedAnswer(i)}
+                      style={{ flexShrink: 0 }}
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+              ))}
+              <button type="button" className="btn btn-secondary btn-sm" onClick={addAcceptedAnswer}>
+                + Add Accepted Answer
+              </button>
+            </div>
+            <div className="form-group">
+              <label>Display Answer <span style={{ color: 'var(--cream-dim)', fontWeight: 'normal', fontSize: '0.8rem' }}>(shown to guests when revealed)</span></label>
+              <input
+                type="text"
+                value={form.correct_answer}
+                onChange={(e) => update('correct_answer', e.target.value)}
+                placeholder="e.g. Chicago (the single answer shown to the group)"
+              />
+            </div>
+          </>
         ) : (
           <div className="form-group">
             <label>Correct Answer</label>

@@ -53,31 +53,6 @@ export default function Board() {
   const spent = chipsSpent(bets)
   const remaining = startingChips - spent
 
-  const showAnswers = settings?.show_answers === true
-
-  function handleBetSuccess(newBet) {
-    setBets((prev) => {
-      const without = prev.filter((b) => b.question_id !== newBet.question_id)
-      return [...without, newBet]
-    })
-    setActiveQuestion(null)
-  }
-
-  const prevShowAnswers = useRef(false)
-  useEffect(() => {
-    if (showAnswers && !prevShowAnswers.current && bets.length > 0) {
-      // Results just revealed — play sound based on first result
-      const firstBet = bets[0]
-      const q = questions.find((q) => q.id === firstBet?.question_id)
-      if (q) {
-        const correct = checkCorrect(q, firstBet)
-        if (correct) { playSuccess(); haptic('success') }
-        else { playWrong(); haptic('error') }
-      }
-    }
-    prevShowAnswers.current = showAnswers
-  }, [showAnswers])
-
   const betMap = {}
   for (const b of bets) {
     betMap[b.question_id] = b
@@ -94,11 +69,47 @@ export default function Board() {
   }
 
   function displayCorrectAnswer(q) {
-    if (q.type === 'fill_blank' && Array.isArray(q.accepted_answers) && q.accepted_answers.length) {
-      return q.accepted_answers.join(' / ')
-    }
-    return q.correct_answer
+    return q.correct_answer || null
   }
+
+  function handleBetSuccess(newBet) {
+    setBets((prev) => {
+      const without = prev.filter((b) => b.question_id !== newBet.question_id)
+      return [...without, newBet]
+    })
+    setActiveQuestion(null)
+  }
+
+  // Play sound when a new answer is revealed
+  const prevRevealedIds = useRef(new Set())
+  useEffect(() => {
+    const currentIds = new Set(questions.filter((q) => q.answer_revealed).map((q) => q.id))
+    const newIds = [...currentIds].filter((id) => !prevRevealedIds.current.has(id))
+    if (newIds.length > 0) {
+      const q = questions.find((q) => q.id === newIds[newIds.length - 1])
+      const bet = betMap[q?.id]
+      if (q && bet) {
+        const correct = checkCorrect(q, bet)
+        if (correct) { playSuccess(); haptic('success') }
+        else { playWrong(); haptic('error') }
+      }
+    }
+    prevRevealedIds.current = currentIds
+  }, [questions])
+
+  // Live score — only counts revealed questions
+  const revealedQuestions = questions.filter((q) => q.answer_revealed)
+  const liveCorrect = revealedQuestions.filter((q) => checkCorrect(q, betMap[q.id]) === true)
+  const liveIncorrect = revealedQuestions.filter((q) => {
+    const c = checkCorrect(q, betMap[q.id])
+    return c === false
+  })
+  const liveScore = isVegas
+    ? liveCorrect.reduce((sum, q) => {
+        const bet = betMap[q.id]
+        return sum + (bet?.chips_wagered || 0)
+      }, 0)
+    : liveCorrect.reduce((sum, q) => sum + (q.points || 0), 0)
 
   return (
     <>
@@ -130,6 +141,25 @@ export default function Board() {
             </div>
           )}
 
+          {/* Live score banner */}
+          {revealedQuestions.length > 0 && (
+            <div className="live-score-banner">
+              <div className="live-score-main">
+                <span className="live-score-label">Your Score</span>
+                <span className="live-score-value">
+                  {isVegas ? `${liveScore.toLocaleString()} chips` : `${liveScore.toLocaleString()} pts`}
+                </span>
+              </div>
+              <div className="live-score-breakdown">
+                <span className="live-score-correct">✓ {liveCorrect.length} correct</span>
+                {liveIncorrect.length > 0 && (
+                  <span className="live-score-incorrect">✗ {liveIncorrect.length} incorrect</span>
+                )}
+                <span className="live-score-remaining">{revealedQuestions.length} of {questions.length} revealed</span>
+              </div>
+            </div>
+          )}
+
           {/* Questions */}
           {loading && (
             <div className="loading-state">
@@ -145,8 +175,8 @@ export default function Board() {
 
           {questions.map((q) => {
             const myBet = betMap[q.id]
-            const isCorrect = showAnswers ? checkCorrect(q, myBet) : null
-            const hasResult = showAnswers && (q.correct_answer || (Array.isArray(q.accepted_answers) && q.accepted_answers.length))
+            const isCorrect = q.answer_revealed ? checkCorrect(q, myBet) : null
+            const hasResult = q.answer_revealed && Boolean(q.correct_answer)
 
             return (
               <div key={q.id} className={`question-card${myBet ? ' answered' : ''}${isCorrect === true ? ' result-correct' : isCorrect === false ? ' result-incorrect' : ''}`}>
