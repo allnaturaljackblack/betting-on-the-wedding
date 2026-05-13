@@ -1292,6 +1292,90 @@ label {
   font-style: italic;
 }
 
+/* MC tabs */
+.mc-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  background: var(--green-dark);
+  border-radius: 10px;
+  padding: 0.3rem;
+}
+
+.mc-tab {
+  flex: 1;
+  background: none;
+  border: none;
+  border-radius: 7px;
+  padding: 0.55rem 0.5rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--cream-dim);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.mc-tab-active {
+  background: var(--green-mid);
+  color: var(--gold);
+}
+
+/* MC leaderboard */
+.mc-lb {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-bottom: 2rem;
+}
+
+.mc-lb-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--green-mid);
+  border: 1px solid var(--gold-dim);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+}
+
+.mc-lb-first {
+  border-color: var(--gold);
+  background: rgba(212,175,55,0.08);
+}
+
+.mc-lb-rank {
+  font-size: 0.8rem;
+  font-weight: 700;
+  min-width: 52px;
+  color: var(--cream-dim);
+}
+
+.mc-lb-rank.gold  { color: var(--gold); font-size: 0.95rem; }
+.mc-lb-rank.silver { color: #c0c0c0; }
+.mc-lb-rank.bronze { color: #cd7f32; }
+
+.mc-lb-name {
+  flex: 1;
+  font-size: 1rem;
+  color: var(--cream);
+  font-weight: 500;
+}
+
+.mc-lb-score {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--gold);
+  font-weight: 700;
+}
+
+.mc-lb-note {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--cream-dim);
+  margin-top: 0.5rem;
+}
+
 .mc-reveal-btn {
   background: var(--gold);
   color: var(--green-dark);
