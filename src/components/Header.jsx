@@ -6,6 +6,7 @@ export default function Header() {
   const navigate = useNavigate()
 
   function handleLeave() {
+    if (!window.confirm('Leave the game? Your bets are saved, but you\'ll need to enter your name again to get back in.')) return
     clearGuest()
     navigate('/')
   }

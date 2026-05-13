@@ -27,6 +27,19 @@ export default function NameEntry() {
     setLoading(true)
     setError('')
 
+    // Check if this name already exists — restore their session instead of creating a duplicate
+    const { data: existing } = await supabase
+      .from('guests')
+      .select('*')
+      .ilike('name', trimmed)
+      .maybeSingle()
+
+    if (existing) {
+      setGuest({ id: existing.id, name: existing.name })
+      navigate('/board')
+      return
+    }
+
     const { data, error: err } = await supabase
       .from('guests')
       .insert({ name: trimmed })
