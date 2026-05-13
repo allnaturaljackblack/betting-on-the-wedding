@@ -12,7 +12,7 @@ import { chipsSpent } from '../utils/scoring'
 export default function Board() {
   const { guest } = useGuest()
   const navigate = useNavigate()
-  const { questions, loading, error } = useQuestions()
+  const { questions, loading, error, connected, refetch } = useQuestions()
   const [bets, setBets] = useState([])
   const [settings, setSettings] = useState(null)
   const [activeQuestion, setActiveQuestion] = useState(null)
@@ -127,6 +127,16 @@ export default function Board() {
             </h1>
             <p style={{ color: 'var(--cream-dim)', fontSize: '0.85rem' }}>The Betting Board — May 16th, 2026</p>
           </div>
+
+          {/* Connection lost banner */}
+          {!connected && (
+            <button
+              onClick={refetch}
+              className="reconnect-banner"
+            >
+              ⚠ Connection lost — tap to refresh
+            </button>
+          )}
 
           {/* Locked banner */}
           {isLocked && (
