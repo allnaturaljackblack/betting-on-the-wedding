@@ -27,12 +27,15 @@ export function useQuestions() {
 
     const channel = supabase
       .channel('questions-realtime')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'questions' }, () => {
-        fetchQuestions()
+      // UPDATE — patch just the changed row in local state, no DB round-trip
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'questions' }, (payload) => {
+        setQuestions((prev) =>
+          prev.map((q) => q.id === payload.new.id ? { ...q, ...payload.new } : q)
+        )
       })
-      .on('system', {}, (status) => {
-        if (status === 'SUBSCRIBED') setConnected(true)
-      })
+      // INSERT or DELETE — do a full refetch (rare: admin adding/removing questions)
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'questions' }, fetchQuestions)
+      .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'questions' }, fetchQuestions)
       .subscribe((status) => {
         if (status === 'SUBSCRIBED') setConnected(true)
         if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT' || status === 'CLOSED') {
@@ -40,7 +43,7 @@ export function useQuestions() {
         }
       })
 
-    // Refetch when the tab becomes visible again (phone waking up)
+    // Refetch when tab becomes visible again (phone waking from sleep)
     function handleVisibilityChange() {
       if (document.visibilityState === 'visible') {
         fetchQuestions()
