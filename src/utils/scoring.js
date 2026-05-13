@@ -59,10 +59,17 @@ export function calculateScore(bets, questions, settings) {
 
     let isCorrect = false
     const normalizedAnswer = String(bet.answer).trim().toLowerCase()
+
     if (q.type === 'fill_blank' && Array.isArray(q.accepted_answers) && q.accepted_answers.length > 0) {
       isCorrect = q.accepted_answers.some(
         (a) => String(a).trim().toLowerCase() === normalizedAnswer
       )
+    } else if (q.type === 'over_under' && q.correct_answer && q.over_under_line != null) {
+      const result = parseFloat(q.correct_answer)
+      if (!isNaN(result) && result !== q.over_under_line) {
+        const correctSide = result > q.over_under_line ? 'over' : 'under'
+        isCorrect = normalizedAnswer === correctSide
+      }
     } else {
       isCorrect =
         q.correct_answer &&

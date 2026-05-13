@@ -5,6 +5,7 @@ import { calculateScore } from '../utils/scoring'
 export function useLeaderboard() {
   const [leaderboard, setLeaderboard] = useState([])
   const [settings, setSettings] = useState(null)
+  const [scoresVisible, setScoresVisible] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -30,6 +31,7 @@ export function useLeaderboard() {
       const settingsData = { ...settingsRes.data, _forceScore: true }
 
       setSettings(settingsRes.data)
+      setScoresVisible(questions.some((q) => q.answer_revealed))
 
       // Build guest map
       const guestMap = {}
@@ -94,5 +96,5 @@ export function useLeaderboard() {
     }
   }, [])
 
-  return { leaderboard, settings, loading, error, refetch: fetchAll }
+  return { leaderboard, settings, scoresVisible, loading, error, refetch: fetchAll }
 }

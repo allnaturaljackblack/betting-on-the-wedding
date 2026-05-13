@@ -5,9 +5,9 @@ export function useQuestions() {
   const [questions, setQuestions] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [connected, setConnected] = useState(true)
 
   async function fetchQuestions() {
-    setLoading(true)
     setError(null)
     const { data, error: err } = await supabase
       .from('questions')
@@ -30,12 +30,30 @@ export function useQuestions() {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'questions' }, () => {
         fetchQuestions()
       })
-      .subscribe()
+      .on('system', {}, (status) => {
+        if (status === 'SUBSCRIBED') setConnected(true)
+      })
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') setConnected(true)
+        if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT' || status === 'CLOSED') {
+          setConnected(false)
+        }
+      })
+
+    // Refetch when the tab becomes visible again (phone waking up)
+    function handleVisibilityChange() {
+      if (document.visibilityState === 'visible') {
+        fetchQuestions()
+        setConnected(true)
+      }
+    }
+    document.addEventListener('visibilitychange', handleVisibilityChange)
 
     return () => {
       supabase.removeChannel(channel)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
     }
   }, [])
 
-  return { questions, loading, error, refetch: fetchQuestions }
+  return { questions, loading, error, connected, refetch: fetchQuestions }
 }

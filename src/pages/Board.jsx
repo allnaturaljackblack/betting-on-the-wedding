@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useGuest } from '../hooks/useGuest'
 import { useQuestions } from '../hooks/useQuestions'
@@ -8,12 +8,11 @@ import BetSheet from '../components/BetSheet'
 import Header from '../components/Header'
 import AnswerMedia from '../components/AnswerMedia'
 import { chipsSpent } from '../utils/scoring'
-import { playSuccess, playWrong, haptic } from '../utils/sounds'
 
 export default function Board() {
   const { guest } = useGuest()
   const navigate = useNavigate()
-  const { questions, loading, error } = useQuestions()
+  const { questions, loading, error, connected, refetch } = useQuestions()
   const [bets, setBets] = useState([])
   const [settings, setSettings] = useState(null)
   const [activeQuestion, setActiveQuestion] = useState(null)
@@ -61,14 +60,33 @@ export default function Board() {
   function checkCorrect(q, bet) {
     if (!bet) return null
     const normalized = String(bet.answer).trim().toLowerCase()
+
     if (q.type === 'fill_blank' && Array.isArray(q.accepted_answers) && q.accepted_answers.length) {
       return q.accepted_answers.some((a) => String(a).trim().toLowerCase() === normalized)
     }
+
+    if (q.type === 'over_under' && q.correct_answer && q.over_under_line != null) {
+      const result = parseFloat(q.correct_answer)
+      if (!isNaN(result)) {
+        if (result === q.over_under_line) return null // push — no winner
+        const correctSide = result > q.over_under_line ? 'over' : 'under'
+        return normalized === correctSide
+      }
+    }
+
     if (!q.correct_answer) return null
     return normalized === String(q.correct_answer).trim().toLowerCase()
   }
 
   function displayCorrectAnswer(q) {
+    if (q.type === 'over_under' && q.correct_answer && q.over_under_line != null) {
+      const result = parseFloat(q.correct_answer)
+      if (!isNaN(result)) {
+        if (result === q.over_under_line) return `Push (${result})`
+        const side = result > q.over_under_line ? 'Over' : 'Under'
+        return `${side} (${result})`
+      }
+    }
     return q.correct_answer || null
   }
 
@@ -79,23 +97,6 @@ export default function Board() {
     })
     setActiveQuestion(null)
   }
-
-  // Play sound when a new answer is revealed
-  const prevRevealedIds = useRef(new Set())
-  useEffect(() => {
-    const currentIds = new Set(questions.filter((q) => q.answer_revealed).map((q) => q.id))
-    const newIds = [...currentIds].filter((id) => !prevRevealedIds.current.has(id))
-    if (newIds.length > 0) {
-      const q = questions.find((q) => q.id === newIds[newIds.length - 1])
-      const bet = betMap[q?.id]
-      if (q && bet) {
-        const correct = checkCorrect(q, bet)
-        if (correct) { playSuccess(); haptic('success') }
-        else { playWrong(); haptic('error') }
-      }
-    }
-    prevRevealedIds.current = currentIds
-  }, [questions])
 
   // Live score — only counts revealed questions
   const revealedQuestions = questions.filter((q) => q.answer_revealed)
@@ -126,6 +127,16 @@ export default function Board() {
             </h1>
             <p style={{ color: 'var(--cream-dim)', fontSize: '0.85rem' }}>The Betting Board — May 16th, 2026</p>
           </div>
+
+          {/* Connection lost banner */}
+          {!connected && (
+            <button
+              onClick={refetch}
+              className="reconnect-banner"
+            >
+              ⚠ Connection lost — tap to refresh
+            </button>
+          )}
 
           {/* Locked banner */}
           {isLocked && (
