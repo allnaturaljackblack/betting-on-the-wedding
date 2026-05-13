@@ -11,11 +11,10 @@ function RankDisplay({ rank }) {
 }
 
 export default function Leaderboard() {
-  const { leaderboard, settings, loading, error } = useLeaderboard()
+  const { leaderboard, settings, scoresVisible, loading, error } = useLeaderboard()
   const { guest } = useGuest()
 
   const isVegas = settings?.scoring_mode === 'vegas'
-  const showAnswers = settings?.show_answers === true
 
   return (
     <>
@@ -26,11 +25,9 @@ export default function Leaderboard() {
             <div style={{ fontSize: '1.5rem', color: 'var(--gold-dim)', marginBottom: '0.5rem' }}>♛</div>
             <h1 style={{ fontSize: '2rem', color: 'var(--gold)', fontStyle: 'italic' }}>The Leaderboard</h1>
             <p style={{ color: 'var(--cream-dim)', fontSize: '0.85rem' }}>
-              {showAnswers
-                ? isVegas
-                  ? 'Live scores — Vegas chip payouts'
-                  : 'Live scores — Traditional scoring'
-                : 'Scores will be revealed when answers are shown'}
+              {scoresVisible
+                ? isVegas ? 'Live scores — Vegas chip payouts' : 'Live scores — Traditional scoring'
+                : 'Scores will appear as the MC reveals answers'}
             </p>
           </div>
 
@@ -52,10 +49,10 @@ export default function Leaderboard() {
               <table className="leaderboard-table">
                 <thead>
                   <tr>
-                    <th style={{ width: '60px' }}>Rank</th>
+                    {scoresVisible && <th style={{ width: '60px' }}>Rank</th>}
                     <th>Name</th>
                     <th>Bets</th>
-                    {showAnswers && <th>{isVegas ? 'Chips' : 'Score'}</th>}
+                    {scoresVisible && <th>{isVegas ? 'Chips' : 'Score'}</th>}
                   </tr>
                 </thead>
                 <tbody>
@@ -65,11 +62,13 @@ export default function Leaderboard() {
                     return (
                       <tr
                         key={entry.id}
-                        className={[rankClass, isCurrentGuest ? 'current-guest' : ''].filter(Boolean).join(' ')}
+                        className={[scoresVisible ? rankClass : '', isCurrentGuest ? 'current-guest' : ''].filter(Boolean).join(' ')}
                       >
-                        <td style={{ textAlign: 'center' }}>
-                          <RankDisplay rank={entry.rank} />
-                        </td>
+                        {scoresVisible && (
+                          <td style={{ textAlign: 'center' }}>
+                            <RankDisplay rank={entry.rank} />
+                          </td>
+                        )}
                         <td>
                           {entry.name}
                           {isCurrentGuest && (
@@ -81,7 +80,7 @@ export default function Leaderboard() {
                         <td style={{ color: 'var(--cream-dim)', fontSize: '0.85rem' }}>
                           {entry.betCount}
                         </td>
-                        {showAnswers && (
+                        {scoresVisible && (
                           <td style={{ color: 'var(--gold)', fontFamily: "'Playfair Display', serif" }}>
                             {entry.score.toLocaleString()}
                           </td>

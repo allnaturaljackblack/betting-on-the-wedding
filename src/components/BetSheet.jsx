@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useGuest } from '../hooks/useGuest'
 import { supabase } from '../lib/supabase'
-import { playChip, playTick, haptic } from '../utils/sounds'
 import BetTypeIcon from './BetTypeIcon'
 import MultipleChoice from './question-types/MultipleChoice'
 import FillBlank from './question-types/FillBlank'
@@ -69,16 +68,12 @@ export default function BetSheet({ question, settings, guestBets, existingBet, o
       return
     }
 
-    playChip()
-    haptic('medium')
     onSuccess(data)
   }
 
   const enrichedQ = { ...question, _isVegas: isVegas }
 
   function handleAnswer(val) {
-    playTick()
-    haptic('light')
     setAnswer(val)
   }
 

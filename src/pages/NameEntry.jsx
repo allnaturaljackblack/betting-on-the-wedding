@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useGuest } from '../hooks/useGuest'
-import { playCardFlip, haptic } from '../utils/sounds'
 
 export default function NameEntry() {
   const [name, setName] = useState('')
@@ -40,8 +39,6 @@ export default function NameEntry() {
       return
     }
 
-    playCardFlip()
-    haptic('medium')
     setGuest({ id: data.id, name: data.name })
     navigate('/board')
   }

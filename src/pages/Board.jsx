@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useGuest } from '../hooks/useGuest'
 import { useQuestions } from '../hooks/useQuestions'
@@ -8,7 +8,6 @@ import BetSheet from '../components/BetSheet'
 import Header from '../components/Header'
 import AnswerMedia from '../components/AnswerMedia'
 import { chipsSpent } from '../utils/scoring'
-import { playSuccess, playWrong, haptic } from '../utils/sounds'
 
 export default function Board() {
   const { guest } = useGuest()
@@ -98,23 +97,6 @@ export default function Board() {
     })
     setActiveQuestion(null)
   }
-
-  // Play sound when a new answer is revealed
-  const prevRevealedIds = useRef(new Set())
-  useEffect(() => {
-    const currentIds = new Set(questions.filter((q) => q.answer_revealed).map((q) => q.id))
-    const newIds = [...currentIds].filter((id) => !prevRevealedIds.current.has(id))
-    if (newIds.length > 0) {
-      const q = questions.find((q) => q.id === newIds[newIds.length - 1])
-      const bet = betMap[q?.id]
-      if (q && bet) {
-        const correct = checkCorrect(q, bet)
-        if (correct) { playSuccess(); haptic('success') }
-        else { playWrong(); haptic('error') }
-      }
-    }
-    prevRevealedIds.current = currentIds
-  }, [questions])
 
   // Live score — only counts revealed questions
   const revealedQuestions = questions.filter((q) => q.answer_revealed)
